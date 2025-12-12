@@ -1,4 +1,4 @@
-package com.example.graphqldemo.entity;
+package kt.bt08.graphql_demo.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

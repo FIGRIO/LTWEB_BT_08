@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>GraphQL Demo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        .product-item {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Danh sách sản phẩm (Giá thấp -> Cao)</h1>
+    <button id="btnLoad">Tải dữ liệu từ GraphQL</button>
+
+    <div id="container">
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#btnLoad").click(function () {
+                // Câu query GraphQL khớp với schema của bạn
+                const query = `
+                    query {
+                        getAllProductsSorted {
+                            id
+                            title
+                            price
+                            descr
+                            category {
+                                name
+                            }
+                        }
+                    }
+                `;
+
+                $.ajax({
+                    url: "/graphql", // Endpoint mặc định của Spring Boot GraphQL
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ query: query }),
+                    success: function (response) {
+                        const products = response.data.getAllProductsSorted;
+                        let html = "";
+
+                        if (products.length === 0) {
+                            html = "<p>Chưa có sản phẩm nào.</p>";
+                        } else {
+                            products.forEach(p => {
+                                html += `
+                                    <div class="product-item">
+                                        <h3>${p.title} (ID: ${p.id})</h3>
+                                        <p>Giá: <strong>${p.price}</strong></p>
+                                        <p>Mô tả: ${p.descr || 'Không có mô tả'}</p>
+                                        <p>Danh mục: ${p.category ? p.category.name : 'Chưa phân loại'}</p>
+                                    </div>
+                                `;
+                            });
+                        }
+                        $("#container").html(html);
+                    },
+                    error: function (err) {
+                        console.error("Lỗi:", err);
+                        alert("Không tải được dữ liệu. Kiểm tra Console log.");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

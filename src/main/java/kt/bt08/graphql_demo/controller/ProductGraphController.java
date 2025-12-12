@@ -1,7 +1,8 @@
-package com.example.graphqldemo.controller;
+package kt.bt08.graphql_demo.controller;
 
-import com.example.graphqldemo.entity.*;
-import com.example.graphqldemo.repository.*;
+import kt.bt08.graphql_demo.entity.*;
+import kt.bt08.graphql_demo.repository.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -28,7 +29,7 @@ public class ProductGraphController {
     public List<Product> getProductsByCategory(@Argument Long categoryId) {
         Category cat = categoryRepo.findById(categoryId).orElse(null);
         if (cat != null) {
-            return cat.getProducts(); // Hibernate sẽ tự fetch list này
+            return cat.getProducts();
         }
         return null;
     }
@@ -42,4 +43,12 @@ public class ProductGraphController {
         p.setCategory(categoryRepo.findById(categoryId).orElse(null));
         return productRepo.save(p);
     }
-}   
+
+    @MutationMapping
+    public Category createCategory(@Argument String name, @Argument String images) {
+        Category category = new Category();
+        category.setName(name);
+        category.setImages(images);
+        return categoryRepo.save(category);
+    }
+}
