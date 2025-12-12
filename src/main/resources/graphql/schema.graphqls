@@ -39,3 +39,19 @@ type Mutation {
     createProduct(title: String!, price: Float!, categoryId: ID!): Product
     deleteProduct(id: ID!): Boolean
 }
+type Query {
+    getAllProductsSorted: [Product]
+    getProductsByCategory(categoryId: ID!): [Product]
+    
+    # Bổ sung: Lấy danh sách User
+    getAllUsers: [User]
+}
+
+type Mutation {
+    createCategory(name: String!, images: String): Category
+    createProduct(title: String!, price: Float!, categoryId: ID!): Product
+    deleteProduct(id: ID!): Boolean
+
+    # Bổ sung: Tạo User
+    createUser(fullname: String!, email: String!, phone: String): User
+}

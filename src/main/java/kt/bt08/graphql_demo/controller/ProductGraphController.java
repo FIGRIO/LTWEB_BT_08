@@ -17,6 +17,7 @@ public class ProductGraphController {
 
     @Autowired private ProductRepository productRepo;
     @Autowired private CategoryRepository categoryRepo;
+    @Autowired private UserRepository userRepo;
 
     // 1. Hiển thị tất cả product có price từ thấp đến cao
     @QueryMapping
@@ -33,6 +34,20 @@ public class ProductGraphController {
         }
         return null;
     }
+    @QueryMapping
+    public List<UserEntity> getAllUsers() {
+        return userRepo.findAll();
+    }
+
+    @MutationMapping
+    public UserEntity createUser(@Argument String fullname, @Argument String email, @Argument String phone) {
+        UserEntity user = new UserEntity();
+        user.setFullname(fullname);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setPassword("123456"); 
+        return userRepo.save(user);
+}
 
     // 3. CRUD: Ví dụ thêm Product
     @MutationMapping
@@ -50,5 +65,15 @@ public class ProductGraphController {
         category.setName(name);
         category.setImages(images);
         return categoryRepo.save(category);
+    }
+    // Thêm vào ProductGraphController.java
+
+    @MutationMapping
+    public Boolean deleteProduct(@Argument Long id) {
+        if(productRepo.existsById(id)) {
+            productRepo.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }
