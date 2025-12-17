@@ -18,6 +18,7 @@ public class Product {
 
     private Integer quantity;
     private String descr;
+    private String image;
 
     // Thêm validation: Phải là số dương
     @NotNull(message = "Giá không được để trống")

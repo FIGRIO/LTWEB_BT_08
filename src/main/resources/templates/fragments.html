@@ -11,12 +11,21 @@
             <div class="container">
                 <div class="d-flex align-items-center">
                     <img th:src="@{/images/me.jpg}" alt="photo"
-                        style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" class="mr-2"
+                        style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" class="me-2"
                         onerror="this.style.display='none'" />
+
                     <div class="ms-2">
-                        <a class="navbar-brand mb-0 h5" th:href="@{/}">BT08 - GraphQL Demo</a>
-                        <div class="small text-muted" style="font-size: 0.8rem;">Ứng dụng quản lý Product / Category /
-                            User</div>
+                        <a class="navbar-brand mb-0 h5 text-primary" th:href="@{/}">
+                            <i class="bi bi-box-seam"></i> BT08 Demo
+                        </a>
+                        <div class="small text-muted" style="font-size: 0.8rem;">
+                            <span th:if="${session.user != null}">
+                                Xin chào, <strong
+                                    th:text="${session.user.fullname != null ? session.user.fullname : session.user.email}">User</strong>
+                                (<span th:text="${session.user.role}">ROLE</span>)
+                            </span>
+                            <span th:unless="${session.user != null}">Ứng dụng quản lý sản phẩm</span>
+                        </div>
                     </div>
                 </div>
 
@@ -25,11 +34,29 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbars">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link active" th:href="@{/}">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Products</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Categories</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Users</a></li>
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+
+                        <li class="nav-item">
+                            <a class="nav-link active" th:href="@{/}"><i class="bi bi-house-door-fill"></i> Home</a>
+                        </li>
+
+                        <li class="nav-item" th:if="${session.user != null and session.user.role == 'ADMIN'}">
+                            <a class="nav-link" th:href="@{/admin/home}">Quản lý SP</a>
+                        </li>
+
+                        <li class="nav-item" th:if="${session.user != null and session.user.role == 'USER'}">
+                            <a class="nav-link" th:href="@{/user/home}">Cửa hàng</a>
+                        </li>
+
+                        <li class="nav-item ms-3">
+                            <a th:if="${session.user != null}" class="btn btn-sm btn-outline-danger"
+                                th:href="@{/logout}">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                            <a th:unless="${session.user != null}" class="btn btn-sm btn-primary" th:href="@{/login}">
+                                <i class="bi bi-person-circle"></i> Login
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -37,15 +64,16 @@
     </div>
 
     <div th:fragment="footer">
-        <div class="bg-light py-3 mt-5 border-top">
-            <div class="container d-flex justify-content-between small text-secondary">
-                <div>
+        <div class="bg-light py-4 mt-5 border-top">
+            <div class="container text-center text-muted small">
+                <div class="mb-2">
                     <strong>Sinh viên:</strong> Huỳnh Anh Nguyên &nbsp; | &nbsp; <strong>MSSV:</strong> 23110134
                 </div>
                 <div>
                     <span>Course: Lập Trình Web</span>
                     &nbsp; &middot; &nbsp;
-                    <span>&copy; <span th:text="${#dates.format(#dates.createNow(),'yyyy')}"></span></span>
+                    <span>&copy; <span th:text="${#dates.format(#dates.createNow(),'yyyy')}"></span> Spring Boot
+                        Project</span>
                 </div>
             </div>
         </div>
